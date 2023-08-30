@@ -15,7 +15,7 @@ export {
 		## The connection's 4-tuple of endpoint addresses/ports.
 		id: conn_id &log;
 
-		success: string &optional &log;
+		success: bool &optional &log;
 	};
 
 	## A default logging policy hook for the stream.
