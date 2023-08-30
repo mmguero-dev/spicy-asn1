@@ -14,6 +14,6 @@ public type Message = unit {
 
     : ASN1::ASN1Message(True) {
         self.success = True;
-    };
+    }
 
 };
