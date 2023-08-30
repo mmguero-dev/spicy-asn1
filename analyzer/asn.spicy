@@ -11,9 +11,9 @@ public type Messages = unit {
 #-----------------------------------------------------------------------------
 public type Message = unit {
     var success: bool = False;
-    _payload: bytes &eod;
+    _payload : bytes &eod;
 
-    asn : ASN1::ASN1Message(True) {
+    : ASN1::ASN1Message(True) {
         self.success = True;
     } &parse-from=self._payload;
 
