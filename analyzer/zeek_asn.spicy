@@ -1,6 +1,3 @@
-# Set up protocol confirmation/rejection for analyzers, as well as any further
-# Zeek-specific analysis.
-
 module Zeek_ASN;
 
 import ASN;
@@ -11,5 +8,5 @@ on ASN::Message::%done {
 }
 
 on ASN::Message::%error {
-    zeek::reject_protocol("error while parsing ASN message");
+    zeek::reject_protocol("error while parsing ASN.1 message");
 }

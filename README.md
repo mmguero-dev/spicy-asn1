@@ -1,4 +1,4 @@
-spicy-asn
+spicy-asn1
 =================================
 
 A dummy package for parsing ASN.1 data.
