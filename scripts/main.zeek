@@ -15,6 +15,9 @@ export {
 		## The connection's 4-tuple of endpoint addresses/ports.
 		id: conn_id &log;
 
+		# transport protocol
+		proto: string &log &optional;
+
 		success: bool &optional &log;
 	};
 
@@ -29,6 +32,7 @@ export {
 }
 
 redef record connection += {
+	asn_proto: string &optional;
 	asn: Info &optional;
 };
 
@@ -53,6 +57,29 @@ hook set_session(c: connection) {
 	Conn::register_removal_hook(c, finalize_asn);
 }
 
+@if (Version::at_least("5.2.0"))
+event analyzer_confirmation_info(atype: AllAnalyzers::Tag, info: AnalyzerConfirmationInfo) {
+  if ( atype == Analyzer::ANALYZER_SPICY_ASN1_TCP ) {
+    info$c$asn_proto = "tcp";
+  } else if ( atype == Analyzer::ANALYZER_SPICY_ASN1_UDP ) {
+    info$c$asn_proto = "udp";
+  }
+}
+@else @if (Version::at_least("4.2.0"))
+event analyzer_confirmation(c: connection, atype: AllAnalyzers::Tag, aid: count) {
+@else
+event protocol_confirmation(c: connection, atype: Analyzer::Tag, aid: count) {
+@endif
+
+  if ( atype == Analyzer::ANALYZER_SPICY_ASN1_TCP ) {
+    c$asn_proto = "tcp";
+  } else if ( atype == Analyzer::ANALYZER_SPICY_ASN1_UDP ) {
+    c$asn_proto = "udp";
+  }
+
+}
+@endif
+
 function emit_log(c: connection) {
 	if ( ! c?$asn )
 		return;
@@ -65,6 +92,10 @@ event ASN::message(c: connection, is_orig: bool, success: bool) {
 	hook set_session(c);
 
 	local info = c$asn;
+
+	if (( ! info?$proto ) && c?$asn_proto)
+	  info$proto = c$asn_proto;
+
 	info$success = success;
 
 	emit_log(c);
