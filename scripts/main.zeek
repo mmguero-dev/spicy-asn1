@@ -15,7 +15,7 @@ export {
 		## The connection's 4-tuple of endpoint addresses/ports.
 		id: conn_id &log;
 
-		payload: string &optional &log;
+		success: string &optional &log;
 	};
 
 	## A default logging policy hook for the stream.
@@ -61,11 +61,11 @@ function emit_log(c: connection) {
 	delete c$asn;
 }
 
-event ASN::message(c: connection, is_orig: bool, payload: string) {
+event ASN::message(c: connection, is_orig: bool, success: bool) {
 	hook set_session(c);
 
 	local info = c$asn;
-	info$payload = payload;
+	info$success = success;
 
 	emit_log(c);
 }
