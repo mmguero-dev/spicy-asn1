@@ -94,13 +94,13 @@ type ASN1Tag = unit {
   var constructed: bool;
 
   : bitfield(8) {
-    num: 0..4;
-    constructed: 5;
-    class: 6..7;
+    num_: 0..4;
+    constructed_: 5;
+    class_: 6..7;
   } {
-    self.type_ = ASN1Type($$.num);
-    self.class = ASN1Class($$.class);
-    self.constructed = cast<bool>($$.constructed);
+    self.type_ = ASN1Type($$.num_);
+    self.class = ASN1Class($$.class_);
+    self.constructed = cast<bool>($$.constructed_);
   }
 };
 
