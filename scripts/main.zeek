@@ -43,8 +43,8 @@ export {
 redef likely_server_ports += { asn1_ports_tcp, asn1_ports_udp };
 
 event zeek_init() &priority=5 {
-	Analyzer::register_for_ports(Analyzer::ANALYZER_SPICY_ASN1_TCP, asn1_ports_tcp);
-	Analyzer::register_for_ports(Analyzer::ANALYZER_SPICY_ASN1_UDP, asn1_ports_udp);
+	Analyzer::register_for_ports(Analyzer::ANALYZER_ASN1_TCP, asn1_ports_tcp);
+	Analyzer::register_for_ports(Analyzer::ANALYZER_ASN1_UDP, asn1_ports_udp);
 
 	Log::create_stream(ASN::LOG, [$columns=Info, $ev=log_asn, $path="asn1", $policy=log_policy]);
 }
@@ -59,9 +59,9 @@ hook set_session(c: connection) {
 
 @if (Version::at_least("5.2.0"))
 event analyzer_confirmation_info(atype: AllAnalyzers::Tag, info: AnalyzerConfirmationInfo) {
-  if ( atype == Analyzer::ANALYZER_SPICY_ASN1_TCP ) {
+  if ( atype == Analyzer::ANALYZER_ASN1_TCP ) {
     info$c$asn_proto = "tcp";
-  } else if ( atype == Analyzer::ANALYZER_SPICY_ASN1_UDP ) {
+  } else if ( atype == Analyzer::ANALYZER_ASN1_UDP ) {
     info$c$asn_proto = "udp";
   }
 }
@@ -71,9 +71,9 @@ event analyzer_confirmation(c: connection, atype: AllAnalyzers::Tag, aid: count)
 event protocol_confirmation(c: connection, atype: Analyzer::Tag, aid: count) {
 @endif
 
-  if ( atype == Analyzer::ANALYZER_SPICY_ASN1_TCP ) {
+  if ( atype == Analyzer::ANALYZER_ASN1_TCP ) {
     c$asn_proto = "tcp";
-  } else if ( atype == Analyzer::ANALYZER_SPICY_ASN1_UDP ) {
+  } else if ( atype == Analyzer::ANALYZER_ASN1_UDP ) {
     c$asn_proto = "udp";
   }
 
